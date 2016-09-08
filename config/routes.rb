@@ -2,10 +2,11 @@ Rails.application.routes.draw do
   resources :relationships
   get 'sessions/new'
 
-  root             'session#index'
+  root             'sessions#index'
   get    'login'   => 'sessions#new'
   post   'login'   => 'sessions#create'
   delete 'logout'  => 'sessions#destroy'
+  post   'relationships' => 'relationships#create'
 
   resources :rooms
   resources :comments

@@ -27,47 +27,17 @@ class UsersController < ApplicationController
   end
 
   # POST /users
-  # POST /users.json #ユーザー登録ページで追加ボタンを押した時
+  # POST /users.json #ユーザー登録ページで追加ボタンを押した時　３
   def create
-    #@users = User.create(user_params)
-    #render json: @users
-
     @user = User.new(user_params)
-    @savedUser = User.where(name_id: @user[:name_id])
-    # puts "*****@user*******"
-    # puts @user.name_id
-    # puts "*****User*******"
-    # puts @savedUser.name_id
-    # puts "****************"
-
-    puts "*****@user*******"
-    puts @user
-    puts "*****User*******"
-    puts @savedUser
-    puts "****************"
-
-
-    # if @user.name_id != @savedUser.name_id
-    #   if @user.save
-    #     redirect_to rooms_url
-    #   else
-    #     render 'new'
-    #   end
-    # else
-    #     render 'new'
-    # end
-
-    #  ルームも増やす
-
-    # respond_to do |format|
-    #   if @user.save
-    #     format.html { redirect_to @user, notice: 'User was successfully created.' }
-    #     format.json { render :show, status: :created, location: @user }
-    #   else
-    #     format.html { render :new }
-    #     format.json { render json: @user.errors, status: :unprocessable_entity }
-    #   end
-    # end
+      if @user.save
+        puts "登録完了"
+        $loginUser = user.id
+        redirect_to rooms_url #ルーム一覧へ移動
+      else
+        puts "既に登録されたIDです"
+        #同じページを再表示
+      end
   end
 
   # PATCH/PUT /users/1

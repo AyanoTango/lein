@@ -9,9 +9,9 @@ class CommentsController < ApplicationController
     @comments = Comment.all
     render json: @comments
 
-    print("****************")
-    print(session[:user_id])
-    print("****************")
+    puts("****************")
+    puts(session[:user_id])
+    puts("****************")
   end
 
   # GET /comments/1
@@ -55,7 +55,7 @@ class CommentsController < ApplicationController
   # end
 
   # POST /comments
-  # POST /comments.json チャットルームで送信ボタンを押した時
+  # POST /comments.json チャットルームで送信ボタンを押した時　
   def create
     @comment = Comment.create(comment_params)
   end

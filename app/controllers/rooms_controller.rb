@@ -2,14 +2,14 @@ class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :edit, :update, :destroy]
 
   # GET /rooms
-  # GET /rooms.json # ユーザー一覧ページ
+  # GET /rooms.json # ユーザー一覧ページ　７
   def index
     @rooms = Room.all
     render json: @rooms
   end
 
   # GET /rooms/1
-  # GET /rooms/1.json #チャットルーム内のコメント
+  # GET /rooms/1.json #チャットルーム内のコメント　６
   def show
     @room = Room.find(params[:id])
 

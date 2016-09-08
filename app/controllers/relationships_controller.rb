@@ -21,20 +21,22 @@ class RelationshipsController < ApplicationController
   def edit
   end
 
-  # POST /relationships
-  # POST /relationships.json
+  # POST /relationships　＃ユーザーをタップしてルーム作成時　４
   def create
-    @relationship = Relationship.new(relationship_params)
+    @relationship = Relationship.new(user_id: relationship_params[:user_id],room_id: (Room.count)+1)
+    @loginUserRelationship = Relationship.new(:user_id =>1 , :room_id => @relationship.room_id)
+    @room = Room.create
 
-    respond_to do |format|
-      if @relationship.save
-        format.html { redirect_to @relationship, notice: 'Relationship was successfully created.' }
-        format.json { render :show, status: :created, location: @relationship }
+      if @relationship.save && @loginUserRelationship.save #ログインユーザのRelationshipも作成
+        puts("************")
+        puts "Relationship 作成完了"
+        puts("************")
+
       else
-        format.html { render :new }
-        format.json { render json: @relationship.errors, status: :unprocessable_entity }
+        puts("************")
+        puts "既に作成済みのRelationshipです"
+        puts("************")
       end
-    end
   end
 
   # PATCH/PUT /relationships/1

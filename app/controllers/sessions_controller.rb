@@ -1,56 +1,51 @@
 class SessionsController < ApplicationController
+  # skip_before_filter :verify_authenticity_token
+  protect_from_forgery :except => [:index]
   protect_from_forgery :except => [:create]
   protect_from_forgery :except => [:destroy]
 
+
   def index
-    print("****************")
-    print(session[:user_id])
-    print("****************")
+    puts("****************")
+    puts(User.find_by(id: session[:user_id]))
+    puts("****************")
+    @us = User.find_by(id: session[:user_id])
+    render json: @us
   end
 
   def new
   end
 
-  # ログインする
+  # ログインする　１
   def create
     user = User.find_by(name_id: params[:name_id])
-    print("user begin")
-    puts(user)
-    print("user end")
-    print(user.authenticate(user[:password]))
 
     if user && user.authenticate(params[:password])
-    # if user && user.authenticate(user[:password]) ##エラー
-      #if user != 'false' ##エラー
-      session[:user_id] = user.id
-      print("login\n")
-    else ###  ID,パスが異なった時###
-      redirect_to root_url
-      print("different\n")
-    end
+       session[:user_id] = user.id
+      puts(User.find_by(id: session[:user_id]))
+      @us = User.find_by(id: session[:user_id])
+      render json: @us
+    else
 
-    print("****************\n")
-    print(session[:user_id])
-    print("\n****************\n")
+    end
+      #room の中からuser_idを持つものだけを表示
+    #   $loginUser = user.id
+    #   @loginUserRelationships = Relationship.where(user_id: $loginUser)
+    #   render json: @loginUserRelationships
+    #   puts("login\n")
+    # else ###  ID,パスが異なった時###
+    #   #redirect_to root_url
+    #   puts("different\n")
+    # end
+    # puts("****************")
+    # puts($loginUser)
+    # puts("****************")
   end
 
-
-  #authenticate:引数とUserが一致しないとfalseを返す
-
-
-  # def create
-  #   user = User.find_by(name_id: params[:name_id], password: params[:password])
-  #   #session[:user_id] = user.id
-  #
-  #   print("****************")
-  #   print(session[:user_id])
-  #   print("****************")
-  # end
-
-  # DELEAT /logout #ログアウトボタンを押した時
+  # DELEAT /logout #ログアウトボタンを押した時　２
   def destroy
-    log_out if logged_in?
-    redirect_to root_url
+    $loginUser = nil
+    #ログイン画面に遷移する
   end
 
 end
