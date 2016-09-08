@@ -8,6 +8,10 @@ class CommentsController < ApplicationController
     #@comments = Comment.all
     @comments = Comment.all
     render json: @comments
+
+    print("****************")
+    print(session[:user_id])
+    print("****************")
   end
 
   # GET /comments/1
@@ -26,11 +30,17 @@ class CommentsController < ApplicationController
   def edit
   end
 
-  # POST /comments
-  # POST /comments.json
-  def create
-    @comment = Comment.create(comment_params)
+  # rooms#show =>
+  def view
+    @comments1 = Comments.find_by(room_id: params[:room_id], user_id: params[:user_id1])
+    render json: @comments1
   end
+
+  # POST /comments
+  # POST /comments.json テスト用
+  # def create
+  #   @comment = Comment.create(comment_params)
+  # end
     # @comment = Comment.new(comment_params)
 
   #   respond_to do |format|
@@ -43,6 +53,12 @@ class CommentsController < ApplicationController
   #     end
   #   end
   # end
+
+  # POST /comments
+  # POST /comments.json チャットルームで送信ボタンを押した時
+  def create
+    @comment = Comment.create(comment_params)
+  end
 
   # PATCH/PUT /comments/1
   # PATCH/PUT /comments/1.json

@@ -2,14 +2,24 @@ class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :edit, :update, :destroy]
 
   # GET /rooms
-  # GET /rooms.json
+  # GET /rooms.json # ユーザー一覧ページ
   def index
     @rooms = Room.all
+    render json: @rooms
   end
 
   # GET /rooms/1
-  # GET /rooms/1.json
+  # GET /rooms/1.json #チャットルーム内のコメント
   def show
+    @room = Room.find(params[:id])
+
+    room_user_1 = @room.user_id1
+    room_user_2 = @room.user_id2
+
+    @comments1 = Comment.where(room_id: params[:id])
+
+    render json: @comments1.to_json
+
   end
 
   # GET /rooms/new
@@ -36,6 +46,7 @@ class RoomsController < ApplicationController
       end
     end
   end
+
 
   # PATCH/PUT /rooms/1
   # PATCH/PUT /rooms/1.json

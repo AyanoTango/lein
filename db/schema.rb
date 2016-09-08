@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160907012939) do
+ActiveRecord::Schema.define(version: 20160908012610) do
 
   create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "comment",    limit: 65535
@@ -20,6 +20,13 @@ ActiveRecord::Schema.define(version: 20160907012939) do
     t.datetime "updated_at",               null: false
   end
 
+  create_table "relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "room_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "rooms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id1"
     t.integer  "user_id2"
@@ -27,19 +34,13 @@ ActiveRecord::Schema.define(version: 20160907012939) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "user", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer "id"
-    t.string  "name_id", limit: 10
-    t.string  "pass",    limit: 10
-    t.string  "name",    limit: 10
-  end
-
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name_id"
-    t.string   "pass"
+    t.string   "password"
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.string   "password_digest"
   end
 
 end
