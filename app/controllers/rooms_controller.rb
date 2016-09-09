@@ -10,15 +10,12 @@ class RoomsController < ApplicationController
 
   # GET /rooms/1
   # GET /rooms/1.json #チャットルーム内のコメント　６
+  # 指定したroom_idを持つコメントを全て表示
   def show
     @room = Room.find(params[:id])
+    @comments = Comment.where(room_id: @room.id)
 
-    room_user_1 = @room.user_id1
-    room_user_2 = @room.user_id2
-
-    @comments1 = Comment.where(room_id: params[:id])
-
-    render json: @comments1.to_json
+    render json: @comments.to_json
 
   end
 

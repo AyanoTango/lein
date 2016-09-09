@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160908114519) do
+ActiveRecord::Schema.define(version: 20160909014430) do
 
   create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "comment",    limit: 65535
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 20160908114519) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.string   "password_digest"
+    t.string   "access_token"
   end
 
 end

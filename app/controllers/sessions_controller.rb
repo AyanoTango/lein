@@ -20,31 +20,35 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(name_id: params[:name_id])
 
-    if user && user.authenticate(params[:password])
-       session[:user_id] = user.id
-      puts(User.find_by(id: session[:user_id]))
-      @us = User.find_by(id: session[:user_id])
-      render json: @us
-    else
+      if user && user.authenticate(params[:password])
+        user.update_attribute(:access_token, SecureRandom.hex) #アクセストークン発行
 
-    end
-      #room の中からuser_idを持つものだけを表示
-    #   $loginUser = user.id
-    #   @loginUserRelationships = Relationship.where(user_id: $loginUser)
-    #   render json: @loginUserRelationships
-    #   puts("login\n")
-    # else ###  ID,パスが異なった時###
-    #   #redirect_to root_url
-    #   puts("different\n")
-    # end
-    # puts("****************")
-    # puts($loginUser)
-    # puts("****************")
+        @loginUserRelationships = Relationship.where(user_id: user.id)#room の中からuser_idを持つものだけを表示
+        render json: @loginUserRelationships
+        puts("login\n")
+
+      else ###  ID,パスが異なった時###
+        #redirect_to root_url
+        puts("different\n")
+      end
+    puts("****************")
+    puts(user.id)
+    puts(user.access_token)
+    puts("****************")
+
   end
 
   # DELEAT /logout #ログアウトボタンを押した時　２
   def destroy
-    $loginUser = nil
+    user = User.find_by(access_token: 'c423128bad02e42be0a721cc54fa2614') #テスト用　
+    user.update_attribute(:access_token, nil)
+
+    puts("****************")
+    puts("logout")
+    puts(user.id)
+    puts(user.access_token)
+    puts("****************")
+
     #ログイン画面に遷移する
   end
 

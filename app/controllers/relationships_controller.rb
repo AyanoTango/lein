@@ -8,8 +8,13 @@ class RelationshipsController < ApplicationController
   end
 
   # GET /relationships/1
-  # GET /relationships/1.json
+  # GET /relationships/1.json # チャットルームからお友達一覧ページへ戻るボタンを押した時、７
   def show
+    login_user = User.find(1)#テスト用
+    #login_user = User.find_by(access_token: 'c423128bad02e42be0a721cc54fa2614')#テスト用
+
+    @relationships = Relationship.where(user_id: login_user)
+    render json: @relationships.to_json #遷移後にrelationship のroom-idを一覧で表示し、/room/1　の形で並べる
   end
 
   # GET /relationships/new
@@ -21,22 +26,44 @@ class RelationshipsController < ApplicationController
   def edit
   end
 
-  # POST /relationships　＃ユーザーをタップしてルーム作成時　４
+  # POST /relationships　＃ユーザーをタップしてルーム作成時、友達になる時　４
   def create
+    login_user = User.find(1)#テスト用
+    #login_user = User.find_by(access_token: 'c423128bad02e42be0a721cc54fa2614')#テスト用
+
     @relationship = Relationship.new(user_id: relationship_params[:user_id],room_id: (Room.count)+1)
-    @loginUserRelationship = Relationship.new(:user_id =>1 , :room_id => @relationship.room_id)
-    @room = Room.create
+    #↑タップしたuser_idと一番新しいroom_idでrelationship作成
+    @loginUserRelationship = Relationship.new(:user_id =>login_user.id , :room_id => @relationship.room_id)
+    #↑ログインuserと先ほど作ったrelationship と同じromm_idでrelationship作成
+    @room = Room.new
 
-      if @relationship.save && @loginUserRelationship.save #ログインユーザのRelationshipも作成
-        puts("************")
-        puts "Relationship 作成完了"
-        puts("************")
+      loginUserRelationship = Relationship.where(user_id: login_user.id)
+      #ログインユーザーのrelationshipの中のroomId全部
 
-      else
-        puts("************")
-        puts "既に作成済みのRelationshipです"
-        puts("************")
+      loginUserRelationship.each do |value|
+        a1 = Relationship.where(room_id: value.room_id)#全てのRからログインユーザーのroom_idと同じidを持つRを代入
+        a2 = a1.where.not(user_id: login_user.id )#その中からログインユーザー以外のRを代入
+        a2.each do |tolkUserR|#ログインユーザー以外のRを回して
+          if tolkUserR.user_id == relationship_params[:user_id]
+              #ログインユーザー以外のRのuser_idと今回タップしたuser_idと等しいかどうか
+            puts("************")
+            puts "既に作成済みのRelationshipです"
+            puts("************")
+            render json: a2.to_json #→　room_id を取り出し　/room/2 へ遷移する
+            return
+          else　
+
+          end
+        end
       end
+      #等しくなければ作成
+      @relationship.save
+      @loginUserRelationship.save
+      @room.save
+      puts("************")
+      puts "Relationship 作成完了"
+      puts("************")
+      render json: @relationship.to_json #→　room_id を取り出し　/room/2 へ遷移する
   end
 
   # PATCH/PUT /relationships/1

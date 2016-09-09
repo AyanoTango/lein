@@ -55,7 +55,7 @@ class CommentsController < ApplicationController
   # end
 
   # POST /comments
-  # POST /comments.json チャットルームで送信ボタンを押した時　
+  # POST /comments.json チャットルームで送信ボタンを押した時（user_idとコメントを受け取る）
   def create
     @comment = Comment.create(comment_params)
   end
