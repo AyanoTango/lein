@@ -2,19 +2,15 @@ class RelationshipsController < ApplicationController
   before_action :set_relationship, only: [:show, :edit, :update, :destroy]
 
   # GET /relationships
-  # GET /relationships.json
+  # GET /relationships.json　
   def index
-    @relationships = Relationship.all
+
   end
 
-  # GET /relationships/1
-  # GET /relationships/1.json # チャットルームからお友達一覧ページへ戻るボタンを押した時、７
+  # GET /relationships
+  # GET /relationships
   def show
-    login_user = User.find(1)#テスト用
-    #login_user = User.find_by(access_token: 'c423128bad02e42be0a721cc54fa2614')#テスト用
 
-    @relationships = Relationship.where(user_id: login_user)
-    render json: @relationships.to_json #遷移後にrelationship のroom-idを一覧で表示し、/room/1　の形で並べる
   end
 
   # GET /relationships/new
@@ -30,12 +26,14 @@ class RelationshipsController < ApplicationController
   def create
     login_user = User.find(1)#テスト用
     #login_user = User.find_by(access_token: 'c423128bad02e42be0a721cc54fa2614')#テスト用
+    partner = User.find(relationship_params[:user_id])
 
     @relationship = Relationship.new(user_id: relationship_params[:user_id],room_id: (Room.count)+1)
     #↑タップしたuser_idと一番新しいroom_idでrelationship作成
     @loginUserRelationship = Relationship.new(:user_id =>login_user.id , :room_id => @relationship.room_id)
     #↑ログインuserと先ほど作ったrelationship と同じromm_idでrelationship作成
-    @room = Room.new
+    @room = Room.new(room_name: login_user.name + '&' + partner.name)
+    #↑「ログインuserの名前＆話相手の名前」をroom.room_nameに保存
 
       loginUserRelationship = Relationship.where(user_id: login_user.id)
       #ログインユーザーのrelationshipの中のroomId全部

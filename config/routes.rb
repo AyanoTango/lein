@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   post   'login'   => 'sessions#create'
   delete 'logout'  => 'sessions#destroy'
   post   'relationships' => 'relationships#create'
+  get    'relationships' => 'relationships#index'
 
   resources :rooms
   resources :comments
