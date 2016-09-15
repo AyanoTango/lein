@@ -2,19 +2,9 @@ class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :edit, :update, :destroy]
 
   # GET /rooms
-  # GET /rooms.json # ユーザー一覧ページ　７
+  # GET /rooms.json
   def index
-    login_user = User.find(1)#テスト用
-    #login_user = User.find_by(access_token: 'c423128bad02e42be0a721cc54fa2614')#テスト用
-    @loginUserRelationship = Relationship.where(user_id: login_user)
 
-    friendRoom = {}
-    @loginUserRelationship.each do |friendship|
-      room = Room.find_by(id: friendship.room_id)
-      friendRoom.store(room.id, room.room_name)
-    end
-    render json: friendRoom
-    #room_nameから「丹後彩乃＆」を消したjsonを渡す
   end
 
   # GET /rooms/1
@@ -24,8 +14,14 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
     @comments = Comment.where(room_id: @room.id)
 
+    #roomsがない場合はno_commentを返す
+    # if @comments.empty?
+    #   @comments = @comments.create(:comment =>"no_comment",:user_id =>"no_comment",:room_id =>"no_comment",:created_at =>"no_comment",:updated_at =>"no_comment")
+    #   render json: @comments.to_json
+    #   puts("*********")
+    #   return
+    # end
     render json: @comments.to_json
-
   end
 
   # GET /rooms/new
@@ -38,46 +34,20 @@ class RoomsController < ApplicationController
   end
 
   # POST /rooms
-  # POST /rooms.json　＃ユーザーをタップしてルーム作成時、友達になる時　４
+  # POST /rooms.json　＃ユーザー一覧ページ　７
   def create
-    login_user = User.find(1)#テスト用
-    #login_user = User.find_by(access_token: 'c423128bad02e42be0a721cc54fa2614')#テスト用
-    partner = User.find(params[:user_id])
+    login_user = User.find_by(access_token: params[:access_token])
+    @loginUserRelationship = Relationship.where(user_id: login_user.id)
 
-    @relationship = Relationship.new(user_id: params[:user_id],room_id: (Room.count)+1)
-    #↑タップしたuser_idと一番新しいroom_idでrelationship作成
-    @loginUserRelationship = Relationship.new(:user_id =>login_user.id , :room_id => @relationship.room_id)
-    #↑ログインuserと先ほど作ったrelationship と同じromm_idでrelationship作成
-    @room = Room.new(room_name: login_user.name + '&' + partner.name)
-    #↑「ログインuserの名前＆話相手の名前」をroom.room_nameに保存
+    friendRoom = {}
+    @loginUserRelationship.each do |friendship|
+      room = Room.find_by(id: friendship.room_id)
+      friendRoom.store(room.id, room.room_name)
+      puts(friendRoom[0].class)
+    end
+    render json: friendRoom
 
-      loginUserRelationship = Relationship.where(user_id: login_user.id)
-      #ログインユーザーのrelationshipの中のroomId全部
-
-      loginUserRelationship.each do |value|
-        a1 = Relationship.where(room_id: value.room_id)#全てのRからログインユーザーのroom_idと同じidを持つRを代入
-        a2 = a1.where.not(user_id: login_user.id )#その中からログインユーザー以外のRを代入
-        a2.each do |tolkUserR|#ログインユーザー以外のRを回して
-          if tolkUserR.user_id == params[:user_id]
-              #ログインユーザー以外のRのuser_idと今回タップしたuser_idと等しいかどうか
-            puts("************")
-            puts "既に作成済みのRelationshipです"
-            puts("************")
-            render json: a2.to_json #→　room_id を取り出し　/room/2 へ遷移する
-            return
-          else　
-
-          end
-        end
-      end
-      #等しくなければ作成
-      @relationship.save
-      @loginUserRelationship.save
-      @room.save
-      puts("************")
-      puts "Relationship 作成完了"
-      puts("************")
-      render json: @relationship.to_json #→　room_id を取り出し　/room/2 へ遷移する
+    #room_nameから「丹後彩乃＆」を消したjsonを渡す
   end
 
 

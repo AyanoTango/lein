@@ -24,16 +24,18 @@ class SessionsController < ApplicationController
         user.update_attribute(:access_token, SecureRandom.hex) #アクセストークン発行
 
         @loginUserRelationships = Relationship.where(user_id: user.id)#room の中からuser_idを持つものだけを表示
-        render json: @loginUserRelationships
+        #render json: @loginUserRelationships
+        render json: user
         puts("login\n")
-
       else ###  ID,パスが異なった時###
-        #redirect_to root_url
+        # error = { "access_token" => "error", "name" => "error", "id" => "error"}
+         error = { "access_token" => "error"}
+        render json: error
         puts("different\n")
       end
     puts("****************")
-    puts(user.id)
-    puts(user.access_token)
+    # puts(user.id)
+    # puts(user.access_token)
     puts("****************")
 
   end

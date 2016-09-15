@@ -29,15 +29,20 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json #ユーザー登録ページで追加ボタンを押した時　３
   def create
-    @user = User.new(user_params)
-      if @user.save
-        puts "登録完了"
-        $loginUser = user.id
-        redirect_to rooms_url #ルーム一覧へ移動
-      else
-        puts "既に登録されたIDです"
-        #同じページを再表示
-      end
+    params[:user] = params
+    @user = User.new(user_params) #←送られてきたparamsで直接newしてもいい
+    if @user.save
+      puts "登録完了"
+      # $loginUser = user.id
+      # redirect_to rooms_url #ルーム一覧へ移動
+      signUp = { "status" => "ok"}
+      render json: signUp
+    else
+      puts "既に登録されたIDです"
+      #同じページを再表示
+      signUp = { "status" => "error"}
+      render json: signUp
+    end
   end
 
   # PATCH/PUT /users/1

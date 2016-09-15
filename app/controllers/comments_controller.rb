@@ -57,8 +57,7 @@ class CommentsController < ApplicationController
   # POST /comments
   # POST /comments.json チャットルームで送信ボタンを押した時（room_idとコメントを受け取る）５
   def create
-    login_user = User.find(1)#テスト用
-    #login_user = User.find_by(access_token: 'c423128bad02e42be0a721cc54fa2614')#テスト用
+    login_user = User.find_by(access_token: params[:access_token])
     @comment = Comment.create(:comment => params[:comment], :user_id => login_user.id, :room_id => params[:room_id])
 
     render json: @comment.to_json
