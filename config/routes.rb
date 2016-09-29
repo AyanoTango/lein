@@ -12,5 +12,7 @@ Rails.application.routes.draw do
   resources :rooms
   resources :comments
   resources :users
+
+  match "/cable", to: ActionCable.server, via: %i(get post)
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

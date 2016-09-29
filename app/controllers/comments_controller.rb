@@ -61,7 +61,9 @@ class CommentsController < ApplicationController
     @comment = Comment.create(:comment => params[:comment], :user_id => login_user.id, :room_id => params[:room_id])
 
     render json: @comment.to_json
-
+    # ActionCable.server.broadcast "chat_#{params[:room]}",
+    #   hoge: "test"
+    # ChatChannel.broadcast_to("chat_1", "test")
   end
 
   # PATCH/PUT /comments/1

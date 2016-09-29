@@ -24,32 +24,54 @@ class RelationshipsController < ApplicationController
 
   # POST /relationships　＃ユーザーをタップしてルーム作成時、友達になる時　４
   def create
-    #login_user = User.find(1)#テスト用
+    # login_user = User.find(1)#テスト用
     login_user = User.find_by(access_token: params[:access_token])#テスト用
+    puts("login_user")
+    puts(login_user.inspect)
     partner = User.find(params[:user_id])
+    puts("partner")
+    puts(partner.inspect)
 
     @relationship = Relationship.new(user_id: params[:user_id],room_id: (Room.count)+1)
     #↑タップしたuser_idと一番新しいroom_idでrelationship作成
+    puts("@relationship")
+    puts(@relationship.inspect)
     @loginUserRelationship = Relationship.new(:user_id =>login_user.id , :room_id => @relationship.room_id)
     #↑ログインuserと先ほど作ったrelationship と同じromm_idでrelationship作成
+    puts("@loginUserRelationship")
+    puts(@loginUserRelationship.inspect)
     @room = Room.new(room_name: login_user.name + '&' + partner.name)
     #↑「ログインuserの名前＆話相手の名前」をroom.room_nameに保存
+    puts("@room")
+    puts(@room.inspect)
 
     loginUserRelationship = Relationship.where(user_id: login_user.id)
     #ログインユーザーのrelationshipの中のroomId全部
+    puts("loginUserRelationship")
+    puts(loginUserRelationship.inspect)
 
     loginUserRelationship.each do |value|
       a1 = Relationship.where(room_id: value.room_id)#全てのRからログインユーザーのroom_idと同じidを持つRを代入
       a2 = a1.where.not(user_id: login_user.id )#その中からログインユーザー以外のRを代入
+      puts("a1")
+      puts(a1.inspect)
+      puts("a2")
+      puts(a2.inspect)
 
       a2.each do |tolkUserR|#ログインユーザー以外のRを回して
-        if tolkUserR.user_id == params[:user_id]
+        puts("tolkUserR.user_id")
+        puts(tolkUserR.user_id)
+        puts("params[:user_id]")
+        puts(params[:user_id])
+        if tolkUserR.user_id === params[:user_id]
           #ログインユーザー以外のRのuser_idと今回タップしたuser_idと等しいかどうか
           puts("************")
           puts "既に作成済みのRelationshipです"
           puts("************")
           render json: a2.first #→　room_id を取り出し　/room/2 へ遷移する
           return
+        else
+
         end
       end
     end

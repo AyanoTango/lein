@@ -14,14 +14,10 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:id])
     @comments = Comment.where(room_id: @room.id)
 
-    #roomsがない場合はno_commentを返す
-    # if @comments.empty?
-    #   @comments = @comments.create(:comment =>"no_comment",:user_id =>"no_comment",:room_id =>"no_comment",:created_at =>"no_comment",:updated_at =>"no_comment")
-    #   render json: @comments.to_json
-    #   puts("*********")
-    #   return
-    # end
     render json: @comments.to_json
+
+    # WebNotificationsChannel.broadcast_to(@comments)
+
   end
 
   # GET /rooms/new
